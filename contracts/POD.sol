@@ -31,6 +31,10 @@ contract POD is ERC721, Ownable {
 		_safeMint(to, tokenId);
 	}
 
+	function claimed(string memory claimCode) external onlyOwner view returns (bool) {
+		return _claimed[claimCode];
+	}
+
 	function _baseURI() internal override view returns (string memory) {
 		return _metadataURI;
 	}
