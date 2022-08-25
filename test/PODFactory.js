@@ -1,34 +1,16 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
+const { MAX_SUPPLY, BASE_URI, deployPodFactory, fetchDeployEvent } = require('../utils/test-helpers')
 
 describe("PODFactory", function() {
-  const MAX_SUPPLY = 3000
-  const BASE_URI = "ipfs://<CID>"
-
-  async function deploy() {
-    // const [owner, otherAccount] = await ethers.getSigners()
-    const PODFactory = await ethers.getContractFactory("PODFactory")
-    const podfactory = await PODFactory.deploy()
-    await podfactory.deployed()
-    return { podfactory }
-  }
-
-  async function fetchEvent(contract, tx) {
-    const deployEvent = contract.filters.Deploy()
-    const eventArray = await contract.queryFilter(deployEvent, tx.blockHash)
-    const eventIndex = eventArray.length ? eventArray.length - 1 : 0
-    const parsedEvent = { event: eventArray[eventIndex].event, args: eventArray[eventIndex].args }
-    return { ...parsedEvent.args }
-  }
-
   describe("Deployment", function () {
     it("Should deploy successfully", async function() {
-      const { podfactory } = await deploy()
+      const { podfactory } = await deployPodFactory()
       expect(podfactory.address)
     })
   
     it("Should set ownership to deployer", async function () {
-      const { podfactory } = await deploy()
+      const { podfactory } = await deployPodFactory()
       const [owner] = await ethers.getSigners()
       expect(await podfactory.owner()).to.equal(owner.address)
     })
@@ -36,12 +18,12 @@ describe("PODFactory", function() {
 
   describe("Functions", function () {
     it("Should create and deploy new POD contract", async function () {
-      const {podfactory} = await deploy()
+      const {podfactory} = await deployPodFactory()
       const [,account1] = await ethers.getSigners()
       const tx = await podfactory.create(account1.address, MAX_SUPPLY, BASE_URI)
       await tx.wait()
 
-      const { contractAddress, assignedTo } = await fetchEvent(podfactory, tx)
+      const { contractAddress, assignedTo } = await fetchDeployEvent(podfactory, tx)
       
       const podContract = new ethers.Contract(
         contractAddress,
@@ -54,13 +36,13 @@ describe("PODFactory", function() {
     })
 
     it("Should create and transferOwnership to assignedOwner param", async function() {
-      const {podfactory} = await deploy()
+      const {podfactory} = await deployPodFactory()
       const [,account1] = await ethers.getSigners()
       await podfactory.create(account1.address, MAX_SUPPLY, BASE_URI)
       const tx = await podfactory.create(account1.address, MAX_SUPPLY, BASE_URI)
       await tx.wait()
 
-      const { contractAddress, assignedTo } = await fetchEvent(podfactory, tx)
+      const { contractAddress, assignedTo } = await fetchDeployEvent(podfactory, tx)
       
       const podContract = new ethers.Contract(
         contractAddress,
@@ -72,13 +54,13 @@ describe("PODFactory", function() {
     })
 
     it("Should create and set _maxSupply as maxSupply param", async function () {
-      const {podfactory} = await deploy()
+      const {podfactory} = await deployPodFactory()
       const [,account1] = await ethers.getSigners()
       await podfactory.create(account1.address, MAX_SUPPLY, BASE_URI)
       const tx = await podfactory.create(account1.address, MAX_SUPPLY, BASE_URI)
       await tx.wait()
 
-      const { contractAddress } = await fetchEvent(podfactory, tx)
+      const { contractAddress } = await fetchDeployEvent(podfactory, tx)
       
       const podContract = new ethers.Contract(
         contractAddress,
@@ -90,13 +72,13 @@ describe("PODFactory", function() {
     })
 
     it("Should create and set _metadataURI as baseURI param", async function () {
-      const {podfactory} = await deploy()
+      const {podfactory} = await deployPodFactory()
       const [,account1] = await ethers.getSigners()
       await podfactory.create(account1.address, MAX_SUPPLY, BASE_URI)
       const tx = await podfactory.create(account1.address, MAX_SUPPLY, BASE_URI)
       await tx.wait()
 
-      const { contractAddress } = await fetchEvent(podfactory, tx)
+      const { contractAddress } = await fetchDeployEvent(podfactory, tx)
       
       const podContract = new ethers.Contract(
         contractAddress,
@@ -110,7 +92,7 @@ describe("PODFactory", function() {
     })
 
     it("Should revert create if not owner", async function () {
-      const {podfactory} = await deploy()
+      const {podfactory} = await deployPodFactory()
       const [,account1] = await ethers.getSigners()
       await expect(podfactory.connect(account1).create(account1.address, MAX_SUPPLY, BASE_URI))
         .to.be.revertedWith("Ownable: caller is not the owner")
@@ -120,7 +102,7 @@ describe("PODFactory", function() {
   describe("Events", function () {
     it("Should create and emit Deploy event", async function () {
       const [owner, account1] = await ethers.getSigners()
-      const { podfactory } = await deploy()
+      const { podfactory } = await deployPodFactory()
       await expect(podfactory.create(account1.address, MAX_SUPPLY, BASE_URI))
         .to.emit(podfactory, "Deploy")
     })
