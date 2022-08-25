@@ -5,6 +5,10 @@
   "main": "index.js",
   "author": "georgeh",
   "license": "MIT",
+  "scripts": {
+    "testf": "npx hardhat test test/PODFactory.js",
+    "testp": "npx hardhat test test/POD.js"
+  },
   "devDependencies": {
     "@ethersproject/abi": "^5.4.7",
     "@ethersproject/providers": "^5.4.7",
