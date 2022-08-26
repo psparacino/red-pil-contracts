@@ -28,6 +28,7 @@ contract POD is ERC721, Ownable {
         require(balanceOf(to) == 0, "POD: recipient balance greater than 0");
         uint256 tokenId = _supply + 1;
         _claimed[claimCode] = true;
+				_supply++;
         _safeMint(to, tokenId);
     }
 
