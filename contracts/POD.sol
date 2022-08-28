@@ -25,10 +25,10 @@ contract POD is ERC721, Ownable {
     function mint(address to, string memory claimCode) external onlyOwner {
         require(!_claimed[claimCode], "POD: code has been claimed");
         require(_supply < _maxSupply, "POD: max supply has been reached");
-        require(balanceOf(to) == 0, "POD: recipient balance greater than 0");
+        require(balanceOf(to) < 24, "POD: recipient balance greater than 24");
         uint256 tokenId = _supply + 1;
         _claimed[claimCode] = true;
-				_supply++;
+		_supply++;
         _safeMint(to, tokenId);
     }
 
@@ -42,11 +42,11 @@ contract POD is ERC721, Ownable {
     }
 
 		function supply() external view returns (uint256) {
-				return _supply;
+			return _supply;
 		}
 
 		function maximumSupply() external view returns (uint256) {
-				return _maxSupply;
+			return _maxSupply;
 		}
 
 		function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {

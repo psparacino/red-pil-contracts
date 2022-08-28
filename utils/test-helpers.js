@@ -10,10 +10,10 @@ module.exports = {
   SYMBOL,
   MAX_SUPPLY,
   BASE_URI,
-  deployPod: async function(accountIndex) {
+  deployPod: async function(accountIndex, maxSupply) {
     const accounts = await ethers.getSigners()
     const POD = await ethers.getContractFactory("POD")
-    const pod = await POD.deploy(NAME, SYMBOL, accounts[accountIndex].address, MAX_SUPPLY, BASE_URI)
+    const pod = await POD.deploy(NAME, SYMBOL, accounts[accountIndex].address, maxSupply, BASE_URI)
     await pod.deployed()
     return { pod, accounts }
   },
@@ -30,5 +30,15 @@ module.exports = {
     const eventIndex = eventArray.length ? eventArray.length - 1 : 0
     const parsedEvent = { event: eventArray[eventIndex].event, args: eventArray[eventIndex].args }
     return { ...parsedEvent.args }
+  },
+  generateCodes: function(supply) {
+    const codes = []
+    while (codes.length < supply) {
+      const code = (Math.random() * 10000 + Math.random() * 1000 + Math.random() * 100 + Math.random() * 10).toString()
+      if (!codes.includes(code)) {
+        codes.push(code)
+      }
+    }
+    return codes
   }
 }
