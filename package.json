@@ -6,8 +6,13 @@
   "author": "georgeh",
   "license": "MIT",
   "scripts": {
-    "testf": "npx hardhat test test/PODFactory.js",
-    "testp": "npx hardhat test test/POD.js"
+    "test-factory": "npx hardhat test test/PODFactory.js",
+    "test-pod": "npx hardhat test test/POD.js",
+    "deploy-factory-gnosis": "npx hardhat run scripts/deploy.js --network gnosis",
+    "deploy-factory-rinkeby": "npx hardhat run scripts/deploy.js --network rinkeby",
+    "deploy-factory-local": "npx hardhat run scripts/deploy.js --network localhost",
+    "create-pod-gnosis": "node scripts/gnosis/createPod.js",
+    "create-pod-rinkeby": "node scripts/rinkeby/createPod.js"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.4.7",
@@ -27,6 +32,7 @@
     "typechain": "^8.1.0"
   },
   "dependencies": {
-    "@openzeppelin/contracts": "^4.7.3"
+    "@openzeppelin/contracts": "^4.7.3",
+    "dotenv": "^16.0.2"
   }
 }

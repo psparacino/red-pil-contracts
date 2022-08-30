@@ -4,16 +4,18 @@ const NAME = "Proof of Drink"
 const SYMBOL = "POD"
 const MAX_SUPPLY = 3000
 const BASE_URI = "ipfs://<CID>"
+const BALANCE_LIMIT = 24
 
 module.exports = {
   NAME,
   SYMBOL,
   MAX_SUPPLY,
   BASE_URI,
+  BALANCE_LIMIT,
   deployPod: async function(accountIndex, maxSupply) {
     const accounts = await ethers.getSigners()
     const POD = await ethers.getContractFactory("POD")
-    const pod = await POD.deploy(NAME, SYMBOL, accounts[accountIndex].address, maxSupply, BASE_URI)
+    const pod = await POD.deploy(NAME, SYMBOL, accounts[accountIndex].address, maxSupply, BASE_URI, BALANCE_LIMIT)
     await pod.deployed()
     return { pod, accounts }
   },

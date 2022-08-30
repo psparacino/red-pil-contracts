@@ -1,6 +1,6 @@
 const { expect } = require("chai");
 const { ethers } = require("hardhat");
-const { NAME, SYMBOL, MAX_SUPPLY, BASE_URI, deployPod, generateCodes } = require("../utils/test-helpers");
+const { NAME, SYMBOL, MAX_SUPPLY, BASE_URI, deployPod, generateCodes } = require("../utils/helpers");
 
 const CLAIM_CODES = generateCodes(MAX_SUPPLY)
 
@@ -55,7 +55,7 @@ describe("POD", function() {
         .to.be.revertedWith("POD: code has been claimed")
     })
 
-    it("Should revert mint if balanceOf to address is greater than 0", async function () {
+    it("Should revert mint if balanceOf to address is greater than balance limit", async function () {
       const [,account1] = await ethers.getSigners()
       const { pod } = await deployPod(0, MAX_SUPPLY)
       for (let i=0; i <= 23; i++) {
@@ -64,7 +64,7 @@ describe("POD", function() {
       }
       expect(await pod.balanceOf(account1.address)).to.equal(24)
       await expect(pod.mint(account1.address, CLAIM_CODES[24]))
-        .to.be.revertedWith("POD: recipient balance greater than 24")
+        .to.be.revertedWith("POD: recipient balance greater than limit")
     })
 
     it("Should revert mint if supply equals max supply", async function () {

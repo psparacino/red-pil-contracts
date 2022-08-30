@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: UNLICENSED
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -10,10 +10,11 @@ contract PODFactory is Ownable {
     function create(
         address assignedOwner,
         uint256 maxSupply,
-        string memory baseURI
+        string memory baseURI,
+        uint256 balanceLimit
     ) public onlyOwner {
         address newPODAddress = address(
-            new POD("Proof of Drink", "POD", assignedOwner, maxSupply, baseURI)
+            new POD("Proof of Drink", "POD", assignedOwner, maxSupply, baseURI, balanceLimit)
         );
         emit Deploy(newPODAddress, msg.sender, assignedOwner);
     }
