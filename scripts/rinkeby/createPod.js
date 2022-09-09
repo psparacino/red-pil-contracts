@@ -1,14 +1,14 @@
 require("dotenv").config()
 const ethers = require("ethers");
-const { fetchDeployEvent } = require("../utils/helpers");
+const { fetchDeployEvent } = require("../../utils/helpers");
 
 const address = process.env.FACTORY_ADDRESS
-const interface = require("../artifacts/contracts/PODFactory.sol/PODFactory.json")
+const interface = require("../../artifacts/contracts/PODFactory.sol/PODFactory.json")
 const provider = new ethers.providers.JsonRpcProvider(process.env.RINKEBY_PROVIDER_URL)
 const signer = new ethers.Wallet(process.env.PRIVATE_KEY, provider)
 
 const BASE_URI = process.env.BASE_URI
-const ASSIGNED_OWNER_ADDRESS = signer.address
+const ASSIGNED_OWNER_ADDRESS = process.env.POD_OWNER
 const MAX_SUPPLY = 3300
 const BALANCE_LIMIT = 24
 
