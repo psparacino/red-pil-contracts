@@ -3,6 +3,8 @@ pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./POD.sol";
+import "hardhat/console.sol";
+
 
 contract PODFactory is Ownable {
     event Deploy(address contractAddress, address indexed creator, address indexed assignedTo);

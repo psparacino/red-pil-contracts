@@ -17,10 +17,10 @@ module.exports = {
   defaultNetwork: 'hardhat',
   networks: {
     hardhat: {},
-    // gnosis: {
-    //   url: process.env.GNOSIS_PROVIDER_URL,
-    //   accounts: [process.env.PRIVATE_KEY]
-    // },
+    gnosis: {
+      url: process.env.GNOSIS_PROVIDER_URL,
+      accounts: [process.env.PRIVATE_KEY]
+    },
     // rinkeby: {
     //   url: process.env.RINKEBY_PROVIDER_URL,
     //   accounts: [process.env.PRIVATE_KEY]
